@@ -21,8 +21,17 @@ interface Obstacle {
   passed: boolean;
 }
 
-// --- ANIMATION STYLES ---
+// --- ANIMATION & CSS STYLES ---
 const animationStyles = `
+  /* Hide Scrollbar */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+
   @keyframes keyPress {
     0%, 100% { transform: translateY(0); border-bottom-width: 4px; }
     50% { transform: translateY(3px); border-bottom-width: 1px; }
@@ -61,9 +70,9 @@ const DemoBlockContainer = ({ animationClass }: { animationClass?: string }) => 
 );
 
 const InstructionCard = ({ title, spikeType, keys, animationClass }: { title: string, spikeType: string, keys: React.ReactNode, animationClass?: string }) => (
-  <div className="bg-gray-800/80 border border-gray-700 p-3 rounded-lg flex flex-col items-center w-full backdrop-blur-sm">
+  <div className="bg-gray-800/80 border border-gray-700 p-2.5 rounded-lg flex flex-col items-center w-full backdrop-blur-sm">
     {/* Spike Visualization Header */}
-    <div className="w-full h-4 bg-red-900/30 mb-2 relative overflow-hidden rounded">
+    <div className="w-full h-3 bg-red-900/30 mb-2 relative overflow-hidden rounded">
       {spikeType === "center" && <div className="absolute inset-x-1/4 h-full bg-red-600"></div>}
       {spikeType === "sides" && <><div className="absolute left-0 w-1/4 h-full bg-red-600"></div><div className="absolute right-0 w-1/4 h-full bg-red-600"></div></>}
       {spikeType === "right" && <div className="absolute right-0 w-3/4 h-full bg-red-600"></div>}
@@ -72,7 +81,7 @@ const InstructionCard = ({ title, spikeType, keys, animationClass }: { title: st
     
     <div className="flex justify-between items-center w-full">
         <div className="flex flex-col">
-            <h3 className="text-cyan-400 font-bold text-sm">{title}</h3>
+            <h3 className="text-cyan-400 font-bold text-xs">{title}</h3>
             <div className="flex gap-2 mt-1 items-center text-gray-400 text-[10px]">
                 {keys}
             </div>
@@ -378,7 +387,7 @@ export default function SpikeRushGame() {
     <div className="flex items-center justify-center min-h-screen bg-black text-white font-mono overflow-hidden relative">
       <style>{animationStyles}</style>
 
-      {/* IMPRINTED BACKGROUND (UPDATED VISIBILITY) */}
+      {/* IMPRINTED BACKGROUND */}
       <div className="fixed inset-0 flex items-center justify-center pointer-events-none z-0 overflow-hidden select-none">
         <h1 className="text-[12rem] md:text-[20rem] font-black text-gray-800 opacity-50 transform -rotate-12 whitespace-nowrap blur-sm">
           SPIKE RUSH
@@ -461,9 +470,12 @@ export default function SpikeRushGame() {
 
             {/* HOW TO PLAY MODAL OVERLAY */}
             {showTutorial && (
-                <div className="absolute inset-0 bg-black/95 z-50 flex flex-col p-6 overflow-y-auto backdrop-blur-xl">
-                    <div className="flex justify-between items-center mb-6 border-b border-gray-800 pb-2">
-                        <h2 className="text-xl font-bold text-cyan-300 tracking-wider">TUTORIAL</h2>
+                <div className="absolute inset-0 bg-black/95 z-50 flex flex-col p-4 overflow-y-auto backdrop-blur-xl no-scrollbar">
+                    <div className="flex justify-between items-center mb-4 border-b border-gray-800 pb-2">
+                        <div className="flex flex-col">
+                            <h2 className="text-xl font-bold text-cyan-300 tracking-wider">TUTORIAL</h2>
+                            <p className="text-[10px] text-gray-500">Controls: A/D or Arrow Keys</p>
+                        </div>
                         <button 
                             onClick={() => setShowTutorial(false)}
                             className="text-gray-400 hover:text-white transition-colors p-1 hover:bg-gray-800 rounded"
@@ -474,29 +486,29 @@ export default function SpikeRushGame() {
                         </button>
                     </div>
                     
-                    <div className="space-y-4 flex-grow">
+                    <div className="space-y-3 flex-grow">
                         <InstructionCard 
                             title="Center Spike"
                             spikeType="center"
                             animationClass="animate-blocks-split"
-                            keys={<><KeyCap label="A" pressed/><KeyCap label="D" pressed/> <span>(Split)</span></>}
+                            keys={<><KeyCap label="A" pressed/><KeyCap label="D" pressed/> <span className="ml-1 text-[10px] text-gray-500">(or Arrows)</span></>}
                         />
                         <InstructionCard 
                             title="Side Spikes"
                             spikeType="sides"
-                            keys={<><KeyCap label="None" /> <span>(Center)</span></>}
+                            keys={<><KeyCap label="None" /> <span className="ml-1 text-[10px] text-gray-500">(Center)</span></>}
                         />
                         <InstructionCard 
                             title="Right Spike"
                             spikeType="right"
                             animationClass="animate-blocks-left"
-                            keys={<><KeyCap label="A" pressed/> <span>(Left)</span></>}
+                            keys={<><KeyCap label="A" pressed/> <span className="ml-1 text-[10px] text-gray-500">(or Left Arrow)</span></>}
                         />
                         <InstructionCard 
                             title="Left Spike"
                             spikeType="left"
                             animationClass="animate-blocks-right"
-                            keys={<><KeyCap label="D" pressed/> <span>(Right)</span></>}
+                            keys={<><KeyCap label="D" pressed/> <span className="ml-1 text-[10px] text-gray-500">(or Right Arrow)</span></>}
                         />
                     </div>
                 </div>
